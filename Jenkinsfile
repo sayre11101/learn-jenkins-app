@@ -9,9 +9,9 @@ pipeline {
                     image 'node:18-alpine'
                     reuseNode true
                     ls -la
+                    npm ci
                     node --version
                     npm --version
-                    npm ci
                 }
             }
         }
