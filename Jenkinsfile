@@ -5,14 +5,19 @@ pipeline {
         stage ('Pre Build') {
             agent {
                 docker {
-                    echo "Pre build stage"
                     image 'node:18-alpine'
                     reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "Pre build stage"
                     ls -la
                     npm ci
                     node --version
                     npm --version
-                }
+
+                '''
             }
         }
 
