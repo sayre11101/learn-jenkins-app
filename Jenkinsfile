@@ -34,7 +34,7 @@ pipeline {
                     ls -la
                     npm run build
                     ls -la
-                    ls -f build/index.html
+                    ls build/index.html
                 '''
             }
         }
@@ -50,7 +50,7 @@ pipeline {
                     echo "Test stage"
                     ls -la
                     npm test
-                    ls -f test-results/junit.xml
+                    ls test-results/junit.xml
                     ls -la
                 '''
             }
