@@ -2,6 +2,20 @@ pipeline {
     agent any
 
     stages {
+        stage ('Pre Build') {
+            agent {
+                docker {
+                    echo "Pre build stage"
+                    image 'node:18-alpine'
+                    reuseNode true
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                }
+            }
+        }
+
         stage('Build') {
             agent {
                 docker {
@@ -13,12 +27,9 @@ pipeline {
                 sh '''
                     echo "Build stage"
                     ls -la
-                    node --version
-                    npm --version
-                    npm ci
                     npm run build
                     ls -la
-                    ls public/index.html
+                    ls -f build/index.html
                 '''
             }
         }
@@ -33,11 +44,8 @@ pipeline {
                 sh '''
                     echo "Test stage"
                     ls -la
-                    node --version
-                    npm --version
-                    npm ci
                     npm test
-                    ls public/index.html
+                    ls -f test-results/junit.xml
                     ls -la
                 '''
             }
