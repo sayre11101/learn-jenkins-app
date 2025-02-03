@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+        // Pre build - do the npm ci command and reuseNode to pass dependencies to other stages
         stage ('Pre Build') {
             agent {
                 docker {
@@ -21,6 +22,8 @@ pipeline {
             }
         }
 
+        // Build stage
+        /* commented out for testing
         stage('Build') {
             agent {
                 docker {
@@ -38,6 +41,9 @@ pipeline {
                 '''
             }
         }
+        */
+
+        // Test stage
         stage('Test') {
             agent {
                 docker {
@@ -55,8 +61,31 @@ pipeline {
                 '''
             }
         }
+
+        // E2@ test using Playwright stage
+        stage('E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.50.1-noble'
+                    reuseNode true
+                    // run this as root?? no just FYI
+                    // args '-u root:root'
+                }
+            }
+            steps {
+                // do not use npm install -g serve because it require root
+                // use local installation but then we need to specify the path to serve
+                sh '''
+                    npm install -g serve
+                    node_modules/.bin/serve -s build
+                    npx playwrite test
+                '''
+            }
+        }
+
     }
     post {
+        // collect the test results to put them into Test Result Trend graph
         always {
             junit 'test-results/junit.xml'
         }
