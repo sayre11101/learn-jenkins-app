@@ -43,44 +43,51 @@ pipeline {
         }
         */
 
-        // Test stage
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+        // Run Tests block
+        stage('Run Tests')
+        {
+            parallel {
+                // Test stage
+                stage('Test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            echo "Test stage"
+                            ls -la
+                            npm test
+                            ls test-results/junit.xml
+                            ls -la
+                        '''
+                    }
                 }
-            }
-            steps {
-                sh '''
-                    echo "Test stage"
-                    ls -la
-                    npm test
-                    ls test-results/junit.xml
-                    ls -la
-                '''
-            }
-        }
 
-        // E2@ test using Playwright stage
-        stage('E2E') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-noble'
-                    reuseNode true
-                    // run this as root?? no just FYI
-                    // args '-u root:root'
+                // E2@ test using Playwright stage
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-noble'
+                            reuseNode true
+                            // run this as root?? no just FYI
+                            // args '-u root:root'
+                        }
+                    }
+                    steps {
+                        // do not use npm install -g serve because it require root
+                        // use local installation but then we need to specify the path to serve
+                        sh '''
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test --reporter=html
+                        '''
+                    }
                 }
-            }
-            steps {
-                // do not use npm install -g serve because it require root
-                // use local installation but then we need to specify the path to serve
-                sh '''
-                    npm install serve
-                    node_modules/.bin/serve -s build &
-                    sleep 10
-                    npx playwright test --reporter=html
-                '''
+
             }
         }
 
