@@ -76,7 +76,7 @@ pipeline {
                 // do not use npm install -g serve because it require root
                 // use local installation but then we need to specify the path to serve
                 sh '''
-                    npm install -g serve
+                    npm install serve
                     node_modules/.bin/serve -s build
                     npx playwrite test
                 '''
