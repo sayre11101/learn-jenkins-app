@@ -89,6 +89,7 @@ pipeline {
         // collect the test results to put them into Test Result Trend graph
         always {
             junit 'test-results/junit.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: 'Playwright HTML report', useWrapperFileDirectly: true])
         }
     }
 }
