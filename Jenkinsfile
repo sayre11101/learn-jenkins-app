@@ -134,7 +134,8 @@ pipeline {
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
                     netlify deploy --dir=build --prod
-                    echo $REACT_APP_VERSION
+                    echo "$REACT_APP_VERSION"
+                    echo "$CI_ENVIRONMENT_URL"
                     npx playwright test  --reporter=html
                 '''
             }
