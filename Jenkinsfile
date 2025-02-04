@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         NETLIFY_SITE_ID = '36f07e0f-d404-4b38-9b7c-c10772d99f1c'
+        NETLIFY_SITE_URL = 'https://sayre11101-learn-jenkins.netlify.app'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         NODE_IMAGE = 'node:18-alpine'
         PLAYWRIGHT_IMAGE = 'my-playwright'
@@ -94,7 +95,7 @@ pipeline {
                 }
             }
             environment {
-                CI_ENVIRONMENT_URL = "$NETLIFY_SITE_ID"
+                CI_ENVIRONMENT_URL = "$NETLIFY_SITE_URL"
             }
             steps {
                 sh '''
@@ -124,7 +125,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = "$NETLIFY_SITE_ID"
+                CI_ENVIRONMENT_URL = "$NETLIFY_SITE_URL"
             }
 
             steps {
