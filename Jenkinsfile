@@ -19,9 +19,8 @@ pipeline {
                 }
             }
             environment {
-                AWS_S3_BUCKET = 'your-aws-bucket-name'
+                AWS_S3_BUCKET = 'learn-jenkins-202502041138'
             }
-             
             steps {
                 withCredentials([usernamePassword(credentialsId: 'aws-jenkins-CLI-access-credentials', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
