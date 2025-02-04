@@ -11,12 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Docker') {
-            steps {
-                sh "docker build -t $PLAYWRIGHT_IMAGE ."
-            }
-        }
-
         // Build stage
         stage('Build') {
             agent {
