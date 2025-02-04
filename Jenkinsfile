@@ -106,6 +106,7 @@ pipeline {
                     grep "deploy_url" deploy-output.json
                     echo "$CI_ENVIRONMENT_URL"
                     echo process.env.CI_ENVIRONMENT_URL
+                    echo $REACT_APP_VERSION
                     npx playwright test  --reporter=html
                 '''
             }
@@ -134,6 +135,9 @@ pipeline {
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
                     netlify deploy --dir=build --prod
+                    echo "$CI_ENVIRONMENT_URL"
+                    echo process.env.CI_ENVIRONMENT_URL
+                    echo $REACT_APP_VERSION
                     npx playwright test  --reporter=html
                 '''
             }
