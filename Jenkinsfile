@@ -103,6 +103,9 @@ pipeline {
                     netlify status
                     netlify deploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' deploy-output.json)
+                    grep "deploy_url" deploy-output.json
+                    echo "$CI_ENVIRONMENT_URL"
+                    echo process.env.CI_ENVIRONMENT_URL
                     npx playwright test  --reporter=html
                 '''
             }
