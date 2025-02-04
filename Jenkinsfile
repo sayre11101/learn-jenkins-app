@@ -6,6 +6,7 @@ pipeline {
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         NODE_IMAGE = 'node:18-alpine'
         PLAYWRIGHT_IMAGE = 'my-playwright'
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
