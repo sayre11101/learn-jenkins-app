@@ -53,7 +53,7 @@ pipeline {
                             echo "Test stage"
                             ls -la
                             npm test
-                            ls test-results/junit.xml
+                            ls jest-results/junit.xml
                         '''
                     }
                     post {
@@ -95,13 +95,17 @@ pipeline {
                     reuseNode true
                 }
             }
+            environment {
+                CI_ENVIRONMENT_URL = "$NETLIFY_SITE_ID"
+            }
             steps {
                 sh '''
                     echo "Deploy stage"
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
                     netlify deploy --dir=build --json > deploy-output.json
-                    node-jq -r '.deploy_id' deploy-output.json > deploy-id.txt
+                    CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' deploy-output.json)
+                    npx playwright test  --reporter=html
                 '''
                 script {
                     env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
