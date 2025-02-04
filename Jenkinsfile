@@ -53,13 +53,12 @@ pipeline {
                             echo "Test stage"
                             ls -la
                             npm test
-                            ls jest-results/junit.xml
                         '''
                     }
                     post {
                         // collect the test results to put them into Test Result Trend graph
                         always {
-                            junit 'test-results/junit.xml'
+                            junit 'jest-results/junit.xml'
                         }
                     }
                 }
@@ -74,7 +73,6 @@ pipeline {
                     }
                     steps {
                         sh '''
-                            npm install serve
                             serve -s build &
                             sleep 10
                             npx playwright test  --reporter=html
@@ -107,8 +105,10 @@ pipeline {
                     CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' deploy-output.json)
                     npx playwright test  --reporter=html
                 '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
+            }
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
         }
