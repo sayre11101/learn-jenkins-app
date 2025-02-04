@@ -10,7 +10,11 @@ pipeline {
         REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
+    
     stages {
+        // comment AWS stage out to create a netlify branch on GitHub 
+        // and allow main to be the default branch
+        /*
         stage('AWS') {
             agent {
                 docker {
@@ -30,6 +34,7 @@ pipeline {
                 }
             }
         }
+        */
 
         // Build stage
         stage('Build') {
